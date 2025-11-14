@@ -1,0 +1,154 @@
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+
+struct node {
+    int info;
+    struct node *ptr;
+} *top = NULL;
+
+int count = 0;
+
+void push(int data);
+void pop();
+int topelement();
+void empty();
+void display();
+void stackcount();
+void destroy();
+void create();
+
+void main() {
+    int no, ch, e;
+
+    clrscr();
+    create();
+
+    while (1) {
+        printf("\n1. Push\n2. Pop\n3. Top\n4. Empty\n5. Exit\n6. Display\n7. Stackcount\n8. Destroy\n");
+        printf("Enter the choice: ");
+        scanf("%d", &ch);
+
+        switch (ch) {
+            case 1:
+                printf("Enter the data: ");
+                scanf("%d", &no);
+                push(no);
+                break;
+
+            case 2:
+                pop();
+                break;
+
+            case 3:
+                if (top == NULL)
+                    printf("The stack is empty\n");
+                else {
+                    e = topelement();
+                    printf("The top element is: %d\n", e);
+                }
+                break;
+
+            case 4:
+                empty();
+                break;
+
+            case 5:
+                exit(0);
+
+            case 6:
+                display();
+                break;
+
+            case 7:
+                stackcount();
+                break;
+
+            case 8:
+                destroy();
+                break;
+
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+
+    getch();
+}
+
+void create() {
+    top = NULL;
+}
+
+void push(int data) {
+    struct node *temp;
+
+    temp = (struct node *)malloc(sizeof(struct node));
+    temp->info = data;
+    temp->ptr = top;
+    top = temp;
+
+    count++;
+
+    printf("Pushed %d\n", data);
+}
+
+void pop() {
+    struct node *temp;
+
+    if (top == NULL) {
+        printf("Error: Trying to pop from an empty stack\n");
+        return;
+    }
+
+    temp = top;
+    printf("Popped value = %d\n", top->info);
+    top = top->ptr;
+    free(temp);
+
+    count--;
+}
+
+int topelement() {
+    return top->info;
+}
+
+void empty() {
+    if (top == NULL)
+        printf("Stack is empty\n");
+    else
+        printf("Stack is NOT empty and contains %d elements\n", count);
+}
+
+void display() {
+    struct node *temp = top;
+
+    if (temp == NULL) {
+        printf("Stack is empty\n");
+        return;
+    }
+
+    printf("Stack elements:\n");
+    while (temp != NULL) {
+        printf("%d\n", temp->info);
+        temp = temp->ptr;
+    }
+}
+
+void stackcount() {
+    printf("The number of elements in the stack = %d\n", count);
+}
+
+void destroy() {
+    struct node *temp;
+
+    while (top != NULL) {
+        temp = top;
+        top = top->ptr;
+        free(temp);
+    }
+
+    count = 0;
+
+    printf("All stack elements destroyed\n");
+}
